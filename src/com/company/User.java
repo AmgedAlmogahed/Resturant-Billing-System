@@ -1,19 +1,24 @@
 package com.company;
 
 import java.sql.SQLException;
+import java.util.Date;
+import java.util.List;
 import java.util.Scanner;
 
 public class User {
 
     Database db;
     Scanner input;
-    User() throws SQLException, ClassNotFoundException {
+    int userId;
+
+    User(int userId) throws SQLException, ClassNotFoundException {
         db = new Database();
         input = new Scanner(System.in);
+        this.userId = userId;
     }
 
 
-    public void options(){
+    public void options() {
         System.out.println(
                 """
                          _________________________________________________________
@@ -31,9 +36,9 @@ public class User {
         );
     }
 
-    public void start(int userId) throws SQLException, ClassNotFoundException {
+    public void start() throws SQLException, ClassNotFoundException {
         boolean bol = true;
-        while(bol) {
+        while (bol) {
             options();
             Scanner in = new Scanner(System.in);
             System.out.print("Enter your choice number: ");
@@ -51,7 +56,7 @@ public class User {
                 case 4 -> {
                     clearCart();
                 }
-                case 5 ->{
+                case 5 -> {
                     makePayment();
                 }
                 case 6 -> {
@@ -66,17 +71,21 @@ public class User {
         }
     }
 
-    private void makePayment() {
+    private void makePayment() throws SQLException {
+        System.out.println("Your bill: ");
+        showCart();
+        clearCart();
+        }
 
 
-    }
+
 
     private void clearCart() throws SQLException {
-        db.deleteCart();
+        db.deleteCart(userId);
     }
 
     private void showCart() throws SQLException {
-        db.showCart();
+        db.showCart(userId);
     }
 
     private void placeOrder(int userId) throws SQLException {
@@ -85,8 +94,8 @@ public class User {
         int itemsNo = input.nextInt();
 
         try {
-            for (int a = 0 ; a < itemsNo; a ++){
-                System.out.println("Add item number: " + (a + 1) );
+            for (int a = 0; a < itemsNo; a++) {
+                System.out.println("Add item number: " + (a + 1));
                 System.out.print("product number: ");
                 int productId = input.nextInt();
                 System.out.print("product quantity: ");

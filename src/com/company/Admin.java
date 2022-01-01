@@ -21,12 +21,11 @@ public class Admin {
                         |------------------- 2) Update products       -----------|
                         |------------------- 3) Delete products       -----------|
                         |------------------- 4) Show all products     -----------|
-                        |------------------- 5) Show purchases        -----------|
-                        |------------------- 6) Add user              -----------|
-                        |------------------- 7) Show users            -----------|
-                        |------------------- 8) Delete user           -----------|
-                        |------------------- 9) update user password  -----------|
-                        |-------------------10) exit                  -----------|
+                        |------------------- 5) Add user              -----------|
+                        |------------------- 6) Show users            -----------|
+                        |------------------- 7) Delete user           -----------|
+                        |------------------- 8) update user password  -----------|
+                        |------------------- 9) exit                  -----------|
                         |                                                        |
                         |________________________________________________________|
                         """
@@ -53,22 +52,19 @@ public class Admin {
                 case 4 -> {
                     showAllMenuItems();
                 }
-                case 5 ->{
-                    showPurchase();
-                }
-                case 6 -> {
+                case 5 -> {
                     addUsers();
                 }
-                case 7 ->{
+                case 6 ->{
                     showUsers();
                 }
-                case 8 ->{
+                case 7 ->{
                     deleteUser();
                 }
-                case 9 ->{
+                case 8 ->{
                     updateUserPassword();
                 }
-                case 10 -> {
+                case 9 -> {
                     bol = false;
                     Main m = new Main();
                     m.start();

@@ -1,8 +1,9 @@
 package com.company;
 
-import javax.lang.model.element.Name;
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class Database {
     static String url = "jdbc:mysql://localhost:3307/billing";
@@ -140,44 +141,34 @@ public class Database {
         }
     }
 
-    public void showCart() throws SQLException {
+    public void showCart(int userId) throws SQLException {
         String sql = "SELECT cart.id,menu.name, menu.price, cart.quantity " +
                 "FROM cart " +
                 "JOIN menu ON product_id = menu.id " +
-                "WHERE cart.user_id;";
+                "WHERE cart.user_id = '"+ userId+"';";
 
         ResultSet rs = st.executeQuery(sql);
         CommandLineTable st = new CommandLineTable();
 
         st.setShowVerticalLines(false);
         st.setHeaders("Item no", "Name", "Price", "Quantity");
+        int totalPrice = 0;
         while (rs.next()) {
+            totalPrice = rs.getInt(3) * rs.getInt(4);
             st.addRow(String.valueOf(rs.getInt(1)), rs.getString(2), rs.getString(3), rs.getString(4));
         }
-        st.print();
+
+        if (!(totalPrice == 0)){
+            st.addRow("", "", "", "");
+            st.addRow("total price", String.valueOf(totalPrice), "", "");
+            st.print();
+        } else {
+            System.out.println("Cart is empty, try to add some items ");
+        }
 
     }
 
-    public HashMap<String, String> getCart() throws SQLException {
-        String sql = "SELECT cart.id,menu.name, menu.price, cart.quantity " +
-                "FROM cart " +
-                "JOIN menu ON product_id = menu.id " +
-                "WHERE cart.user_id;";
-        ResultSet rs = st.executeQuery(sql);
 
-        HashMap<String, String> cartItems = new HashMap<>();
-        while (rs.next()) {
-            int id = rs.getInt(1);
-            String Name = rs.getString(2);
-            String pass = rs.getString(3);
-            String type = rs.getString(4);
-            cartItems.put("id", Name);
-            cartItems.put("name", pass);
-            cartItems.put("price", type);
-            cartItems.put("quantity", String.valueOf(id));
-        }
-        return cartItems;
-}
 
     public void updateCartQuantity(int quantity, int id) throws SQLException {
         String sqlupdate = "update cart set `quantity` = '" + quantity + "' where `id` = '" + id + "'";
@@ -185,25 +176,18 @@ public class Database {
         System.out.println("Quantity updated successfully to: " + quantity);
     }
 
-    public void deleteCart(int id) throws SQLException {
-        String sqldelete = "delete from cart where `id` ='" + id + "'";
+    public void deleteCart(int id, int userId) throws SQLException {
+        String sqldelete = "delete from cart where `id` ='" + id + "' and cart.user_id = '"+ userId+"'";
         st.executeUpdate(sqldelete);
         System.out.println("Item number" + id + "was deleted successfully");
     }
 
-    public void deleteCart() throws SQLException {
-        String sqldelete = "delete from cart";
+    public void deleteCart(int userId) throws SQLException {
+        String sqldelete = "delete from cart where cart.user_id = '"+ userId+"'";
         st.executeUpdate(sqldelete);
         System.out.println("Cart Items was deleted successfully");
     }
 
-    public static void main(String[] args) throws SQLException, ClassNotFoundException {
-        Database db = new Database();
 
-        db.showMenus();
-        db.showUsers();
-        db.showCart();
-
-    }
 
 }

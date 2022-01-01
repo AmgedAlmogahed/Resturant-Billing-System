@@ -69,15 +69,15 @@ public class Main {
         String password = in.next().trim();
 
         Database db = new Database();
-        User user = new User();
-        Admin admin = new Admin();
 
         HashMap<String, String> userInfo = db.validateUser(userName,password);
 
         if (!userInfo.isEmpty()){
+            User user = new User(Integer.parseInt(userInfo.get("id")));
+            Admin admin = new Admin();
             String type = userInfo.get("type");
             if(type.equals(Main.user)){
-                user.start(Integer.parseInt(userInfo.get("id")));
+                user.start();
             } else if(type.equals(Main.admin)){
                 admin.start();
             }
